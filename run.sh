@@ -99,40 +99,22 @@ fi
 
 # Rubocop and Rails Best Practices notifications
 
-echo $SLACK_NOTIFY_FAILED_RBC_RBP
-
-if [ ! -z "$SLACK_NOTIFY_FAILED_RBC_RBP" ]; then
+if [ ! -z "$SLACK_NOTIFY_FAILED_RBP" ]; then
     sleep 2
 
-    export WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP="$WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME by $WERCKER_STARTED_BY broke RUBOCOP and/or RAILS BEST PRACTICES"
+    WERCKER_SLACK_NOTIFY_FAILED_RBP="$WERCKER_STARTED_BY BROKE Rails Best Practices!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
 
-    json="{\"channel\": \"#$WERCKER_SLACK_NOTIFY_CHANNEL\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
+    json="{\"channel\": \"dev", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
 
     RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
 fi
 
-if [ "$RESULT" = "500" ]; then
-  if grep -Fqx "No token" $WERCKER_STEP_TEMP/result.txt; then
-    fatal "No token is specified."
-  fi
+if [ ! -z "$SLACK_NOTIFY_FAILED_RBC" ]; then
+    sleep 2
 
-  if grep -Fqx "No hooks" $WERCKER_STEP_TEMP/result.txt; then
-    fatal "No hook can be found for specified subdomain/token"
-  fi
+    WERCKER_SLACK_NOTIFY_FAILED_RBC="$WERCKER_STARTED_BY BROKE Rubocop!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
 
-  if grep -Fqx "Invalid channel specified" $WERCKER_STEP_TEMP/result.txt; then
-    fatal "Could not find specified channel for subdomain/token."
-  fi
+    json="{\"channel\": \"dev", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
 
-  if grep -Fqx "No text specified" $WERCKER_STEP_TEMP/result.txt; then
-    fatal "No text specified."
-  fi
-
-  # Unhandled error
-  # fatal <$WERCKER_STEP_TEMP/result.txt
-fi
-
-if [ "$RESULT" = "404" ]; then
-  error "Subdomain or token not found."
-  exit 1
+    RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
 fi
