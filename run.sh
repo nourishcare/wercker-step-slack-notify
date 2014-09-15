@@ -100,21 +100,21 @@ fi
 # Rubocop and Rails Best Practices notifications
 
 if [ ! -z "$SLACK_NOTIFY_FAILED_RBP" ]; then
-    sleep 2
+  sleep 2
 
-    export WERCKER_SLACK_NOTIFY_FAILED_RBP="$WERCKER_STARTED_BY BROKE Rails Best Practices!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
+  export WERCKER_SLACK_NOTIFY_FAILED_RBP="$WERCKER_STARTED_BY BROKE Rails Best Practices!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
 
-    json="{\"channel\": \"#dev\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
+  json="{\"channel\": \"#$WERCKER_SLACK_NOTIFY_CHANNEL\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_MESSAGE\"}"
 
-    RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
+  RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
 fi
 
 if [ ! -z "$SLACK_NOTIFY_FAILED_RBC" ]; then
-    sleep 2
+  sleep 2
 
-    export WERCKER_SLACK_NOTIFY_FAILED_RBC="$WERCKER_STARTED_BY BROKE Rubocop!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
+  export WERCKER_SLACK_NOTIFY_FAILED_RBC="$WERCKER_STARTED_BY BROKE Rubocop!!! ($WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME)"
 
-    json="{\"channel\": \"#dev\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
+  json="{\"channel\": \"#$WERCKER_SLACK_NOTIFY_CHANNEL\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_MESSAGE\"}"
 
-    RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
+  RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
 fi
