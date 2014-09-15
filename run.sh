@@ -99,7 +99,9 @@ fi
 
 # Rubocop and Rails Best Practices notifications
 
-if [ ! -n "$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP" ]; then
+echo $SLACK_NOTIFY_FAILED_RBC_RBP
+
+if [ ! -n "$SLACK_NOTIFY_FAILED_RBC_RBP" ]; then
     export WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP="$WERCKER_GIT_BRANCH to $WERCKER_DEPLOYTARGET_NAME by $WERCKER_STARTED_BY broke RUBOCOP and/or RAILS BEST PRACTICES"
 
     json="{\"channel\": \"#$WERCKER_SLACK_NOTIFY_CHANNEL\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
@@ -107,7 +109,6 @@ if [ ! -n "$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP" ]; then
     RESULT=`curl -s -d "payload=$json" "https://$WERCKER_SLACK_NOTIFY_SUBDOMAIN.slack.com/services/hooks/incoming-webhook?token=$WERCKER_SLACK_NOTIFY_TOKEN" --output $WERCKER_STEP_TEMP/result.txt -w "%{http_code}"`
 fi
 
-export WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP="OUTSIDE!"
 
 json="{\"channel\": \"#$WERCKER_SLACK_NOTIFY_CHANNEL\", $USERNAME $AVATAR \"text\": \"$WERCKER_SLACK_NOTIFY_FAILED_RBC_RBP\"}"
 
